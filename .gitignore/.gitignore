@@ -1,0 +1,192 @@
+#include<iostream>
+#include<iomanip>
+#include<cmath>
+#include<string>
+#include<vector>
+#include<ctime>
+#include<cstdlib>
+using namespace std;
+
+
+
+
+string randomWord()
+{
+	int selector = rand() % 5;
+	cout << selector << endl;
+
+	if (selector == 1)
+		return "chocolate";
+	else if (selector == 2)
+		return "discussion";
+	else if (selector == 3)
+		return "caffeine";
+	else if (selector == 4)
+		return "tutorial";
+	else if (selector == 0)
+		return "implementation";
+	else
+		return "error";
+}
+
+struct hangman
+{
+	string word = randomWord();
+	string incorrect;
+	string correct;
+	int guesses = 0;
+};
+
+void wordDisplay(hangman hangman)
+{
+	;
+}
+
+bool searchWord(hangman hangman, char letter)
+{
+	int counter = 0;
+
+	while (counter <= hangman.word.size())
+	{
+		if (hangman.word[counter] == letter)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		counter++;
+	}
+}
+
+bool GamePlay()
+{
+	string choice, word;
+	char letter;
+	hangman hangman;
+	//counter variable for letter guess
+	int counter = 0;
+	//counter variable for string
+	int index = 0;
+	cout << "A random word has been chosen" << endl;
+	
+	cout << "Would you like to guess a letter or word?: ";
+	cin >> choice;
+	//Letter check portion
+	if (choice == "Letter" || choice == "letter")
+	{
+		cout << "Please enter your guess: ";
+		cin >> letter;
+		if (searchWord(hangman, letter) == true)
+			cout << "The letter that was guessed was in the word" << endl;
+		else if (searchWord(hangman, letter) == false)
+			cout << "The letter that was guessed was not in the word" << endl;
+		else
+			cout << "EROROROROR" << endl;
+	}
+	else if (choice == "Word" || "word")
+	{
+		cout << "Please enter your Guess: ";
+		cin >> word;
+		if (hangman.word == word)
+			cout << "CONGRATULATIONS, you guessed the word correctly!!" << endl;
+		else
+			cout << "Sorry, the word that you guesssed was not correct" << endl;
+	}
+
+	return false;
+
+
+}
+
+
+
+int main()
+{
+	srand(time(NULL));
+	cout << randomWord() << endl;
+	cout << string(50, '~') << endl;
+	cout << GamePlay();
+
+	/*cout << "  __________    " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  0         |   " << endl; 
+	cout << " /|\\        |   " << endl;
+	cout << "  |         |   " << endl;
+	cout << " / \\        |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << " ~~~~~~~~~~~~~~~" << endl;
+	cout << "HOW COULD YOU LET HIM DIE??????" << endl;
+	cout << endl << endl << endl;
+
+	cout << "  __________    " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  0         |   " << endl;
+	cout << " /|         |   " << endl;
+	cout << "  |         |   " << endl;
+	cout << " / \\        |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << " ~~~~~~~~~~~~~~~" << endl;
+
+	cout << endl << endl << endl;
+
+	cout << "  __________    " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  0         |   " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  |         |   " << endl;
+	cout << " / \\        |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << " ~~~~~~~~~~~~~~~" << endl;
+
+	cout << endl << endl << endl;
+
+	cout << "  __________    " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  0         |   " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  |         |   " << endl;
+	cout << " /          |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << " ~~~~~~~~~~~~~~~" << endl;
+	cout << endl << endl << endl;
+
+	cout << "  __________    " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  0         |   " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  |         |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << " ~~~~~~~~~~~~~~~" << endl;
+
+	cout << endl << endl << endl;
+
+	cout << "  __________    " << endl;
+	cout << "  |         |   " << endl;
+	cout << "  0         |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << " ~~~~~~~~~~~~~~~" << endl;
+
+	cout << endl << endl << endl;
+
+	cout << "  __________    " << endl;
+	cout << "  |         |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << " ~~~~~~~~~~~~~~~" << endl;*/
+}
