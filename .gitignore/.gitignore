@@ -8,22 +8,31 @@
 #include<thread>
 using namespace std;
 
+void scroll(int value)
+{
+	for (int counter = 0; counter < value; counter++)
+	{
+		cout << endl;
+		this_thread::sleep_for(chrono::milliseconds(50));
+	}
+}
+
+void gap(int value)
+{
+	for (int counter = 0; counter < value; counter++)
+		cout << endl;
+}
+
 string randomWord()
 {
 	int selector = rand() % 5;
-
-	if (selector == 1)
-		return "chocolate";
-	else if (selector == 2)
-		return "discussion";
-	else if (selector == 3)
-		return "caffeine";
-	else if (selector == 4)
-		return "tutorial";
-	else if (selector == 0)
-		return "implementation";
-	else
-		return "error";
+	vector<string> randomWord(5);
+	randomWord[0] = "chocolate";
+	randomWord[1] = "discussion";
+	randomWord[2] = "caffeine";
+	randomWord[3] = "tutorial";
+	randomWord[4] = "implementation";
+	return randomWord[selector];
 }
 
 struct hangman
@@ -46,7 +55,7 @@ void createUnknown(vector<char>& unknown, struct hangman hangman)
 
 void gallowdisplay(struct hangman hangman)
 {
-	if(hangman.guesses == 0)
+	if (hangman.guesses == 0)
 	{
 		cout << "  __________    " << endl;
 		cout << "  |         |   " << endl;
@@ -149,16 +158,12 @@ bool searchWord(hangman hangman, vector<char>& unknown, char letter)
 					unknown[counter] = letter;
 			}
 
-			for (int counter = 0; counter < hangman.word.length(); counter++)
-			{
-				cout << unknown[counter];
-			}
 			cout << endl;
 			return true;
 		}
 		counter++;
 	}
-	
+
 }
 
 bool GamePlay()
@@ -171,18 +176,12 @@ bool GamePlay()
 	vector<char> unknown;
 	int counter = 0;
 
-	//beginning of the game
-	cout << "Quick this man needs help..." << endl;
-	//this_thread::sleep_for(chrono::seconds(2));
-	cout << "In order to save his life you need to correctly guess the word the executioner is thinking of..." << endl;
-	//this_thread::sleep_for(chrono::seconds(3));
-	cout << "Don't worry though you have the ability to guess incorrectly six times before he's executed..." << endl;
-	//this_thread::sleep_for(chrono::seconds(4));
-	cout << "Let's begin..." << endl;
-	//this_thread::sleep_for(chrono::seconds(2));
+	//begginnig of actual game
 	cout << string(80, '_') << endl;
 	cout << "The executioner has chosen his word..." << endl;
-	//this_thread::sleep_for(chrono::seconds(2));
+	this_thread::sleep_for(chrono::seconds(1));
+	
+	
 	cout << "  __________    " << endl;
 	cout << "  |         |   " << endl;
 	cout << "            |   " << endl;
@@ -194,6 +193,8 @@ bool GamePlay()
 	cout << " ~~~~~~~~~~~~~~~" << endl;
 	cout << hangman.word << endl;
 	createUnknown(unknown, hangman);
+	
+	
 	while (hangman.guesses < 6 && word != hangman.word)
 	{
 		cout << "Would you like to guess a letter or word?: ";
@@ -203,19 +204,41 @@ bool GamePlay()
 		{
 			cout << "Please enter your guess: ";
 			cin >> letter;
+			gap(50);
 			if (searchWord(hangman, unknown, letter) == true)
 			{
-				cout << "The letter " << letter << " is most definitely in the word" << endl;
+				
 				gallowdisplay(hangman);
+
+				for (int counter = 0; counter < hangman.word.length(); counter++)
+				{
+					cout << unknown[counter];
+				}
+				scroll(2);
 				hangman.correct.push_back(letter);
+				scroll(2);
+				cout << "The letter " << letter << " is most definitely in the word" << endl;
+				scroll(2);
+				//gap(5);
+			
 				result = true;
 			}
 			else
 			{
-				cout << "The letter" << letter << " IS NOT in the word" << endl;
-				hangman.guesses++;
+
 				gallowdisplay(hangman);
+
+				for (int counter = 0; counter < hangman.word.length(); counter++)
+				{
+					cout << unknown[counter];
+				}
+				scroll(2);
 				hangman.incorrect.push_back(letter);
+				cout << "The letter " << letter << " IS NOT in the word" << endl;
+				cout << endl;
+				hangman.guesses++;
+				//gap(5);
+			
 				result = false;
 			}
 		}
@@ -224,13 +247,15 @@ bool GamePlay()
 		{
 			cout << "Please enter your Guess: ";
 			cin >> word;
+			gap(50);
 			if (hangman.word == word)
 			{
 				gallowdisplay(hangman);
 				cout << "CONGRATULATIONS, you guessed the word correctly!!" << endl;
-				//this_thread::sleep_for(chrono::seconds(2));
+				this_thread::sleep_for(chrono::seconds(2));
 				cout << "The executioner will release the man, you saved his life, well done" << endl;
 				result = true;
+				scroll(5);
 				break;
 			}
 
@@ -239,6 +264,7 @@ bool GamePlay()
 				cout << "Sorry, the word that you guesssed was not correct" << endl;
 				hangman.guesses++;
 				gallowdisplay(hangman);
+				scroll(5);
 				result = false;
 			}
 		}
@@ -247,22 +273,62 @@ bool GamePlay()
 		{
 			cout << hangman.correct[index] << " ";
 		}
-		cout << endl;
+		gap(3);
 		cout << "The letters that you have guessed incorrectly are: ";
 		for (int index = 0; index < hangman.incorrect.size(); index++)
 		{
 			cout << hangman.incorrect[index] << " ";
 		}
-		cout << endl;
+		gap(3);
 		cout << "You have " << 6 - hangman.guesses << " guesses left" << endl;
+		gap(2);
 	}
 	return result;
 }
 
-
-
 int main()
 {
+	char again = 'y';
+	int wins = 0;
+	int losses = 0;
+
 	srand(time(NULL));
-	GamePlay();
+	cout << "Would you like to play a game? (Y/N) ";
+	cin >> again;
+	if (again == 'y')
+	{
+		//prologue
+		cout << "Quick this man needs help..." << endl;
+		this_thread::sleep_for(chrono::seconds(1));
+		scroll(2);
+		cout << "In order to save his life you need to correctly guess the word the executioner is thinking of..." << endl;
+		this_thread::sleep_for(chrono::seconds(2));
+		scroll(2);
+		cout << "Don't worry though you have the ability to guess incorrectly six times before he's executed..." << endl;
+		this_thread::sleep_for(chrono::seconds(2));
+		scroll(2);
+		cout << "Let's begin..." << endl;
+		this_thread::sleep_for(chrono::seconds(1));
+		scroll(2);
+		scroll(20);
+		gap(20);
+	}
+
+	while (again != 'n')
+	{
+
+
+		if (GamePlay() == true)
+			wins++;
+		else
+			losses++;
+
+		cout << "Wins: " << wins << endl;
+		cout << "Losses: " << losses << endl;
+
+		cout << "Would you like to Play again? (Y/N) ";
+		cin >> again;
+	
+	}
+	
 }
