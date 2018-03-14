@@ -5,15 +5,12 @@
 #include<vector>
 #include<ctime>
 #include<cstdlib>
+#include<thread>
 using namespace std;
-
-
-
 
 string randomWord()
 {
 	int selector = rand() % 5;
-	cout << selector << endl;
 
 	if (selector == 1)
 		return "chocolate";
@@ -32,17 +29,112 @@ string randomWord()
 struct hangman
 {
 	string word = randomWord();
-	string incorrect;
-	string correct;
+	vector<char> incorrect;
+	vector<char> correct;
 	int guesses = 0;
 };
 
-void wordDisplay(hangman hangman)
+void createUnknown(vector<char>& unknown, struct hangman hangman)
 {
-	;
+	for (int counter = 0; counter < hangman.word.length(); counter++)
+	{
+		unknown.push_back('-');
+		cout << unknown[counter];
+	}
+	cout << endl;
 }
 
-bool searchWord(hangman hangman, char letter)
+void gallowdisplay(struct hangman hangman)
+{
+	if(hangman.guesses == 0)
+	{
+		cout << "  __________    " << endl;
+		cout << "  |         |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << " ~~~~~~~~~~~~~~~" << endl;
+	}
+	else if (hangman.guesses == 1)
+	{
+		cout << "  __________    " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  0         |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << " ~~~~~~~~~~~~~~~" << endl;
+	}
+	else if (hangman.guesses == 2)
+	{
+		cout << "  __________    " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  0         |   " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  |         |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << " ~~~~~~~~~~~~~~~" << endl;
+	}
+	else if (hangman.guesses == 3)
+	{
+		cout << "  __________    " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  0         |   " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  |         |   " << endl;
+		cout << " /          |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << " ~~~~~~~~~~~~~~~" << endl;
+	}
+	else if (hangman.guesses == 4)
+	{
+		cout << "  __________    " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  0         |   " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  |         |   " << endl;
+		cout << " / \\        |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << " ~~~~~~~~~~~~~~~" << endl;
+	}
+	else if (hangman.guesses == 5)
+	{
+		cout << "  __________    " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  0         |   " << endl;
+		cout << " /|         |   " << endl;
+		cout << "  |         |   " << endl;
+		cout << " / \\        |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << " ~~~~~~~~~~~~~~~" << endl;
+	}
+	else if (hangman.guesses == 6)
+	{
+		cout << "  __________    " << endl;
+		cout << "  |         |   " << endl;
+		cout << "  0         |   " << endl;
+		cout << " /|\\        |   " << endl;
+		cout << "  |         |   " << endl;
+		cout << " / \\        |   " << endl;
+		cout << "            |   " << endl;
+		cout << "            |   " << endl;
+		cout << " ~~~~~~~~~~~~~~~" << endl;
+		cout << "HOW COULD YOU LET HIM DIE??????" << endl;
+		cout << endl << endl << endl;
+	}
+}
+
+bool searchWord(hangman hangman, vector<char>& unknown, char letter)
 {
 	int counter = 0;
 
@@ -50,54 +142,121 @@ bool searchWord(hangman hangman, char letter)
 	{
 		if (hangman.word[counter] == letter)
 		{
+			for (int counter = 0; counter < hangman.word.length(); counter++)
+			{
+
+				if (hangman.word[counter] == letter)
+					unknown[counter] = letter;
+			}
+
+			for (int counter = 0; counter < hangman.word.length(); counter++)
+			{
+				cout << unknown[counter];
+			}
+			cout << endl;
 			return true;
-		}
-		else
-		{
-			return false;
 		}
 		counter++;
 	}
+	
 }
 
 bool GamePlay()
 {
+	//variable declaration
+	bool result;
 	string choice, word;
 	char letter;
 	hangman hangman;
-	//counter variable for letter guess
+	vector<char> unknown;
 	int counter = 0;
-	//counter variable for string
-	int index = 0;
-	cout << "A random word has been chosen" << endl;
-	
-	cout << "Would you like to guess a letter or word?: ";
-	cin >> choice;
-	//Letter check portion
-	if (choice == "Letter" || choice == "letter")
+
+	//beginning of the game
+	cout << "Quick this man needs help..." << endl;
+	//this_thread::sleep_for(chrono::seconds(2));
+	cout << "In order to save his life you need to correctly guess the word the executioner is thinking of..." << endl;
+	//this_thread::sleep_for(chrono::seconds(3));
+	cout << "Don't worry though you have the ability to guess incorrectly six times before he's executed..." << endl;
+	//this_thread::sleep_for(chrono::seconds(4));
+	cout << "Let's begin..." << endl;
+	//this_thread::sleep_for(chrono::seconds(2));
+	cout << string(80, '_') << endl;
+	cout << "The executioner has chosen his word..." << endl;
+	//this_thread::sleep_for(chrono::seconds(2));
+	cout << "  __________    " << endl;
+	cout << "  |         |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << "            |   " << endl;
+	cout << " ~~~~~~~~~~~~~~~" << endl;
+	cout << hangman.word << endl;
+	createUnknown(unknown, hangman);
+	while (hangman.guesses < 6 && word != hangman.word)
 	{
-		cout << "Please enter your guess: ";
-		cin >> letter;
-		if (searchWord(hangman, letter) == true)
-			cout << "The letter that was guessed was in the word" << endl;
-		else if (searchWord(hangman, letter) == false)
-			cout << "The letter that was guessed was not in the word" << endl;
-		else
-			cout << "EROROROROR" << endl;
+		cout << "Would you like to guess a letter or word?: ";
+		cin >> choice;
+		//Letter check portion
+		if (choice == "Letter" || choice == "letter")
+		{
+			cout << "Please enter your guess: ";
+			cin >> letter;
+			if (searchWord(hangman, unknown, letter) == true)
+			{
+				cout << "The letter " << letter << " is most definitely in the word" << endl;
+				gallowdisplay(hangman);
+				hangman.correct.push_back(letter);
+				result = true;
+			}
+			else
+			{
+				cout << "The letter" << letter << " IS NOT in the word" << endl;
+				hangman.guesses++;
+				gallowdisplay(hangman);
+				hangman.incorrect.push_back(letter);
+				result = false;
+			}
+		}
+		//word check portion
+		else if (choice == "Word" || "word")
+		{
+			cout << "Please enter your Guess: ";
+			cin >> word;
+			if (hangman.word == word)
+			{
+				gallowdisplay(hangman);
+				cout << "CONGRATULATIONS, you guessed the word correctly!!" << endl;
+				//this_thread::sleep_for(chrono::seconds(2));
+				cout << "The executioner will release the man, you saved his life, well done" << endl;
+				result = true;
+				break;
+			}
+
+			else
+			{
+				cout << "Sorry, the word that you guesssed was not correct" << endl;
+				hangman.guesses++;
+				gallowdisplay(hangman);
+				result = false;
+			}
+		}
+		cout << "The letters that you have guess correctly are: ";
+		for (int index = 0; index < hangman.correct.size(); index++)
+		{
+			cout << hangman.correct[index] << " ";
+		}
+		cout << endl;
+		cout << "The letters that you have guessed incorrectly are: ";
+		for (int index = 0; index < hangman.incorrect.size(); index++)
+		{
+			cout << hangman.incorrect[index] << " ";
+		}
+		cout << endl;
+		cout << "You have " << 6 - hangman.guesses << " guesses left" << endl;
 	}
-	else if (choice == "Word" || "word")
-	{
-		cout << "Please enter your Guess: ";
-		cin >> word;
-		if (hangman.word == word)
-			cout << "CONGRATULATIONS, you guessed the word correctly!!" << endl;
-		else
-			cout << "Sorry, the word that you guesssed was not correct" << endl;
-	}
-
-	return false;
-
-
+	return result;
 }
 
 
@@ -105,88 +264,5 @@ bool GamePlay()
 int main()
 {
 	srand(time(NULL));
-	cout << randomWord() << endl;
-	cout << string(50, '~') << endl;
-	cout << GamePlay();
-
-	/*cout << "  __________    " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  0         |   " << endl; 
-	cout << " /|\\        |   " << endl;
-	cout << "  |         |   " << endl;
-	cout << " / \\        |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << " ~~~~~~~~~~~~~~~" << endl;
-	cout << "HOW COULD YOU LET HIM DIE??????" << endl;
-	cout << endl << endl << endl;
-
-	cout << "  __________    " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  0         |   " << endl;
-	cout << " /|         |   " << endl;
-	cout << "  |         |   " << endl;
-	cout << " / \\        |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << " ~~~~~~~~~~~~~~~" << endl;
-
-	cout << endl << endl << endl;
-
-	cout << "  __________    " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  0         |   " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  |         |   " << endl;
-	cout << " / \\        |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << " ~~~~~~~~~~~~~~~" << endl;
-
-	cout << endl << endl << endl;
-
-	cout << "  __________    " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  0         |   " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  |         |   " << endl;
-	cout << " /          |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << " ~~~~~~~~~~~~~~~" << endl;
-	cout << endl << endl << endl;
-
-	cout << "  __________    " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  0         |   " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  |         |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << " ~~~~~~~~~~~~~~~" << endl;
-
-	cout << endl << endl << endl;
-
-	cout << "  __________    " << endl;
-	cout << "  |         |   " << endl;
-	cout << "  0         |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << " ~~~~~~~~~~~~~~~" << endl;
-
-	cout << endl << endl << endl;
-
-	cout << "  __________    " << endl;
-	cout << "  |         |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << "            |   " << endl;
-	cout << " ~~~~~~~~~~~~~~~" << endl;*/
+	GamePlay();
 }
